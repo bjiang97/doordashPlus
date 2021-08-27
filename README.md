@@ -9,7 +9,7 @@ the client-side with ReactJS and Ant Design are built to allow users to add item
 
 This is the repo of back end code.
 
-Front end code repo:
+Front end code repo: https://github.com/bjiang97/doordashPlus_frontend
 ### Pages
 #### Home page
 ![Home page](/images/doordash_homepage.png)

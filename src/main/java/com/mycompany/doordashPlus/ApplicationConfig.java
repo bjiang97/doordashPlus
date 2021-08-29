@@ -1,4 +1,6 @@
 package com.mycompany.doordashPlus;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +14,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 public class ApplicationConfig {
 
     @Bean(name = "sessionFactory")          // external class用@Bean
-    public LocalSessionFactoryBean sessionFactory() {
+    public LocalSessionFactoryBean sessionFactory() throws IOException {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
         sessionFactory.setPackagesToScan("com.mycompany.doordashPlus.entity");
@@ -21,12 +23,23 @@ public class ApplicationConfig {
     }
 
     @Bean(name = "dataSource")
-    public DataSource dataSource() {
+    public DataSource dataSource() throws IOException {
+
+        Properties prop = new Properties();
+        String propFileName = "config.properties";
+
+        //        read config file by using input stream
+        InputStream inputStream = ApplicationConfig.class.getClassLoader().getResourceAsStream(propFileName);
+        prop.load(inputStream);
+        String url = prop.getProperty("sql_url");
+        String username = prop.getProperty("sql_username");
+        String password = prop.getProperty("sql_password");
+
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://mysql-instance-2021summer.cliojbiqfegh.us-east-2.rds.amazonaws.com:3306/onlineOrder?createDatabaseIfNotExist=true&serverTimezone=UTC");
-        dataSource.setUsername("admin");
-        dataSource.setPassword("12345678");
+        dataSource.setUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
 
         return dataSource;
     }
